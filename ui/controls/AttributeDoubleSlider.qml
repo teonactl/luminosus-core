@@ -89,7 +89,7 @@ CustomTouchArea {
         }
         Connections {
             target: attr1
-            onValChanged: controller.midiMapping().sendFeedback(extInput1.mappingID, attr1.val)
+            function onValChanged() { controller.midiMapping().sendFeedback(extInput1.mappingID, attr1.val) }
         }
     }
     Item {
@@ -103,7 +103,7 @@ CustomTouchArea {
         }
         Connections {
             target: attr2
-            onValChanged: controller.midiMapping().sendFeedback(extInput2.mappingID, attr2.val)
+            function onValChanged() { controller.midiMapping().sendFeedback(extInput2.mappingID, attr2.val) }
         }
     }
     Component.onCompleted: {

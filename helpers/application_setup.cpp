@@ -30,16 +30,12 @@ void preQApplicationCreation() {
     // prepare Qt application:
     // (using QApplication instead of smaller QGuiApplication to support QWidget based
     // FileDialogs on Linux)
-#ifdef Q_OS_LINUX
-    setenv("QSG_RENDER_LOOP", "windows", /*overwrite=*/ 1);
-#endif
 //#ifdef Q_OS_IOS
 //    // disable QML cache on iOS for now because it doesn't work with Qt 5.10 and iOS 11.2 beta
 //    // (shader files are not found and black rectangles are visible)
 //    qputenv("QML_DISABLE_DISK_CACHE", "1");
 //#endif
     //setenv("QSG_INFO", "1", /*overwrite=*/ 1);
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QGuiApplication::setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, false);
 #if !defined Q_OS_ANDROID && !defined Q_OS_IOS
     QGuiApplication::setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents, false);

@@ -45,7 +45,11 @@ void DoubleAttribute::writeTo(QCborMap& state) const {
 }
 
 void DoubleAttribute::readFrom(const QCborMap& state) {
-    setValue(state[m_name].toDouble());
+    // una chiave assente (attributo appena aggiunto, salvataggio precedente
+    // alla sua introduzione) non deve sovrascrivere il valore di default con 0:
+    if (state.contains(m_name)) {
+        setValue(state[m_name].toDouble());
+    }
 }
 
 void DoubleAttribute::setValue(double value) {
@@ -79,7 +83,9 @@ void IntegerAttribute::writeTo(QCborMap& state) const {
 }
 
 void IntegerAttribute::readFrom(const QCborMap& state) {
-    setValue(int(state[m_name].toInteger()));
+    if (state.contains(m_name)) {
+        setValue(int(state[m_name].toInteger()));
+    }
 }
 
 void IntegerAttribute::setValue(int value) {
@@ -109,7 +115,9 @@ void StringAttribute::writeTo(QCborMap& state) const {
 }
 
 void StringAttribute::readFrom(const QCborMap& state) {
-    setValue(state[m_name].toString());
+    if (state.contains(m_name)) {
+        setValue(state[m_name].toString());
+    }
 }
 
 void StringAttribute::setValue(QString value) {
@@ -138,7 +146,9 @@ void BoolAttribute::writeTo(QCborMap& state) const {
 }
 
 void BoolAttribute::readFrom(const QCborMap& state) {
-    setValue(state[m_name].toBool());
+    if (state.contains(m_name)) {
+        setValue(state[m_name].toBool());
+    }
 }
 
 void BoolAttribute::setValue(bool value) {
@@ -168,10 +178,12 @@ void RgbAttribute::writeTo(QCborMap& state) const {
 }
 
 void RgbAttribute::readFrom(const QCborMap& state) {
-    double r = state[m_name + "r"].toDouble();
-    double g = state[m_name + "g"].toDouble();
-    double b = state[m_name + "b"].toDouble();
-    setValue({r, g, b});
+    if (state.contains(m_name + "r")) {
+        double r = state[m_name + "r"].toDouble();
+        double g = state[m_name + "g"].toDouble();
+        double b = state[m_name + "b"].toDouble();
+        setValue({r, g, b});
+    }
 }
 
 double RgbAttribute::hue() const {
@@ -257,10 +269,12 @@ void HsvAttribute::writeTo(QCborMap& state) const {
 }
 
 void HsvAttribute::readFrom(const QCborMap& state) {
-    double h = state[m_name + "h"].toDouble();
-    double s = state[m_name + "s"].toDouble();
-    double v = state[m_name + "v"].toDouble();
-    setValue({h, s, v});
+    if (state.contains(m_name + "h")) {
+        double h = state[m_name + "h"].toDouble();
+        double s = state[m_name + "s"].toDouble();
+        double v = state[m_name + "v"].toDouble();
+        setValue({h, s, v});
+    }
 }
 
 void HsvAttribute::setValue(const HSV& value) {
@@ -304,7 +318,9 @@ void StringListAttribute::writeTo(QCborMap& state) const {
 }
 
 void StringListAttribute::readFrom(const QCborMap& state) {
-    setValue(deserializeBinary<QStringList>(state[m_name].toByteArray()));
+    if (state.contains(m_name)) {
+        setValue(deserializeBinary<QStringList>(state[m_name].toByteArray()));
+    }
 }
 
 void StringListAttribute::setValue(QStringList value) {
@@ -347,7 +363,9 @@ void VariantListAttribute::writeTo(QCborMap& state) const {
 }
 
 void VariantListAttribute::readFrom(const QCborMap& state) {
-    setValue(state[m_name].toArray().toVariantList());
+    if (state.contains(m_name)) {
+        setValue(state[m_name].toArray().toVariantList());
+    }
 }
 
 void VariantListAttribute::setValue(QVariantList value) {

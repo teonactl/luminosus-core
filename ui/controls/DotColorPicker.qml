@@ -201,7 +201,7 @@ Item {
 
                         Connections {
                             target: root
-                            onColChanged: touchArea.setCursorPosition(root.col.hsvHue)
+                            function onColChanged() { touchArea.setCursorPosition(root.col.hsvHue) }
                         }
                         Component.onCompleted: {
                             touchArea.setCursorPosition(root.col.hsvHue)
@@ -266,7 +266,7 @@ Item {
         }
         Connections {
             target: root
-            onColChanged: controller.midiMapping().sendFeedback(extInputH.mappingID, root.col.hsvHue)
+            function onColChanged() { controller.midiMapping().sendFeedback(extInputH.mappingID, root.col.hsvHue) }
         }
     }
     Item {
@@ -280,7 +280,7 @@ Item {
         }
         Connections {
             target: root
-            onColChanged: controller.midiMapping().sendFeedback(extInputS.mappingID, root.col.hsvSaturation)
+            function onColChanged() { controller.midiMapping().sendFeedback(extInputS.mappingID, root.col.hsvSaturation) }
         }
     }
     Item {
@@ -294,7 +294,7 @@ Item {
         }
         Connections {
             target: root
-            onColChanged: controller.midiMapping().sendFeedback(extInputV.mappingID, root.col.hsvValue)
+            function onColChanged() { controller.midiMapping().sendFeedback(extInputV.mappingID, root.col.hsvValue) }
         }
     }
     Component.onCompleted: {

@@ -563,7 +563,14 @@ void BlockManager::makeRandomConnection() {
         BlockInterface* block = m_currentBlocks.at((std::size_t(randOffset) + i) % m_currentBlocks.size());
         QList<QPointer<NodeBase>> nodes = block->getNodes();
         for (int k = 0; k < nodes.size() && !output; ++k) {
-            NodeBase* node = nodes.at((randOffset + k) % nodes.size());
+            // randOffset è un int ottenuto da QRandomGenerator::generate() (un
+            // quint32 a tutto il range): oltre INT_MAX diventa negativo, e
+            // (negativo + k) % nodes.size() può restare negativo (il modulo in
+            // C++ ha lo stesso segno del dividendo) — QList::at() con un indice
+            // negativo va in assert. Stesso cast già usato sopra per
+            // m_currentBlocks, mancava qui: è la causa esatta del crash in
+            // QList<QPointer<NodeBase>>::at() durante il random connection test.
+            NodeBase* node = nodes.at((std::size_t(randOffset) + std::size_t(k)) % std::size_t(nodes.size()));
             if (node->isOutput()) {
                 output = node;
                 break;
@@ -580,7 +587,8 @@ void BlockManager::makeRandomConnection() {
         BlockInterface* block = m_currentBlocks.at((std::size_t(randOffset) + i) % m_currentBlocks.size());
         QList<QPointer<NodeBase>> nodes = block->getNodes();
         for (int k = 0; k < nodes.size() && !input; ++k) {
-            NodeBase* node = nodes.at((randOffset + k) % nodes.size());
+            // Vedi commento identico nel loop di "output" sopra.
+            NodeBase* node = nodes.at((std::size_t(randOffset) + std::size_t(k)) % std::size_t(nodes.size()));
             if (!node->isOutput()) {
                 input = node;
                 break;

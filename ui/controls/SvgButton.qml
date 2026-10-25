@@ -11,7 +11,7 @@ CustomTouchArea {
 	property string iconName: ""
 	property bool inverted: false
     property alias size: icon.width
-    property alias rotation: icon.rotation
+    property alias iconRotation: icon.rotation
 	//C:\Users\thenning\Documents\breeze_icons\actions
 
     signal press

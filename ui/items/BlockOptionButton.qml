@@ -8,7 +8,9 @@ Rectangle {
     width: 25*dp
     height: 30*dp
     anchors.top: parent.bottom
-    anchors.topMargin: block.focused && enabled ? (settingsButtonTouchArea.mouseOver || active ? -5*dp : -10*dp) : -height
+    // block può essere momentaneamente null durante lo smontaggio del blocco
+    // genitore (vedi commento in BlockBase.qml) — qui va comunque nascosto.
+    anchors.topMargin: block && block.focused && enabled ? (settingsButtonTouchArea.mouseOver || active ? -5*dp : -10*dp) : -height
     radius: 5*dp
     antialiasing: dp < 2
     color: "#444"
@@ -33,8 +35,9 @@ Rectangle {
     }
 
     Connections {
-        target: block
-        function onFocusedChanged() { if (!block.focused) active = false }
+        // Vedi commento identico in BlockBase.qml sul perché "? : null".
+        target: block ? block : null
+        function onFocusedChanged() { if (!block || !block.focused) active = false }
     }
 
     CustomTouchArea {

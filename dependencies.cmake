@@ -49,6 +49,8 @@ set(PROJECT_HEADERS
     core/manager/KeyboardEmulator.h
     core/manager/LogManager.h
     core/manager/ProjectManager.h
+    core/manager/WebsocketConnection.h
+    core/helpers/AsyncWebSocket.h
     core/version.h
 )
 
@@ -97,6 +99,8 @@ set(PROJECT_SOURCES
     core/manager/KeyboardEmulator.cpp
     core/manager/LogManager.cpp
     core/manager/ProjectManager.cpp
+    core/manager/WebsocketConnection.cpp
+    core/helpers/AsyncWebSocket.cpp
 )
 
 set(PROJECT_RESOURCES

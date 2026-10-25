@@ -11,10 +11,15 @@ Item {
     property alias color: background.color
     property bool ignoreKeyboardShortcuts: false
 
-	onXChanged: block.positionChanged()
-	onYChanged: block.positionChanged()
+    // block può diventare null durante lo smontaggio dell'elemento grafico
+    // (BlockManager::deleteBlock() stacca l'oggetto C++ del blocco prima che
+    // questo item QML finisca di essere distrutto — vedi il commento in
+    // BlockManager.cpp): senza guardia, un ultimo cambio di x/y durante quella
+    // finestra genera un "Cannot read property 'positionChanged' of undefined".
+	onXChanged: if (block) block.positionChanged()
+	onYChanged: if (block) block.positionChanged()
 
-    z: block.focused ? 1 : 0
+    z: block && block.focused ? 1 : 0
     antialiasing: false
 
     Component {
@@ -89,7 +94,7 @@ Item {
         cornerRadius: glowRadius
         spread: 0.1
         color: Qt.rgba(0.9, 0.8, 0.0, 0.5)
-        visible: block.focused && showShadows
+        visible: block && block.focused && showShadows
     }
 
     Rectangle {
@@ -124,14 +129,14 @@ Item {
             duration: xAnimator.duration
         }
         onStopped: {
-            block.positionChangedExternal()
+            if (block) block.positionChangedExternal()
         }
     }
 
 	// ------------------ Keyboard Handling ----------------------
 
 	// Delete Key:
-	Keys.onDeletePressed: {
+	Keys.onDeletePressed: function(event) {
         if (block.focused && !ignoreKeyboardShortcuts) {
             block.deletedByUser()
 			event.accepted = true
@@ -139,7 +144,7 @@ Item {
 	}
 
     // Ctrl + D, Ctrl + C and Ctrl + X:
-	Keys.onPressed: {
+	Keys.onPressed: function(event) {
         if (!block.focused || ignoreKeyboardShortcuts) return;
 		if (event.key === Qt.Key_D && (event.modifiers & Qt.ControlModifier)) {
 			controller.blockManager().duplicateFocusedBlock()
@@ -169,7 +174,7 @@ Item {
         running: false
         duration: GRAPHICAL_EFFECTS_LEVEL < 2 ? 0 : 150
         onStopped: {
-            block.onDeleteAnimationEnd()
+            if (block) block.onDeleteAnimationEnd()
         }
     }
 
@@ -190,7 +195,12 @@ Item {
         }
 
         Connections {
-            target: root.block
+            // "target: root.block ? root.block : null" invece di solo
+            // "root.block": quando block diventa undefined (oggetto C++
+            // distrutto) assegnarlo direttamente generava un "Unable to
+            // assign [undefined] to QObject*" — null è il valore "non c'è
+            // target" che QML si aspetta per questa proprietà.
+            target: root.block ? root.block : null
             function onPositionChangedExternal() {
                 kineticEffect.setValue(root.x, root.y)
             }

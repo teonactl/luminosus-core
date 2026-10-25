@@ -17,6 +17,7 @@ class HandoffManager;
 class KeyboardEmulator;
 class LogManager;
 class ProjectManager;
+class WebsocketConnection;
 
 /**
  * @brief The CoreController class initializes all components and
@@ -111,6 +112,11 @@ public slots:
      * @return a pointer to a KeyboardEmulator instance
      */
     KeyboardEmulator* keyboardEmulator() { return m_keyboardEmulator.get(); }
+    /**
+     * @brief websocketConnection is a Getter for the only WebsocketConnection instance to use in this application
+     * @return a pointer to a WebsocketConnection instance
+     */
+    WebsocketConnection* websocketConnection() { return m_websocketConnection.get(); }
 
 
     // -----------------------------  State / Projects:
@@ -217,6 +223,7 @@ protected:
     QScopedPointer<KeyboardEmulator> m_keyboardEmulator;  //!< KeyboardEmulator instance
     QScopedPointer<LogManager> m_logManager;  //!< LogManager instance
     QScopedPointer<ProjectManager> m_projectManager;  //!< GlobalOscCommands instance
+    QScopedPointer<WebsocketConnection> m_websocketConnection;  //!< WebsocketConnection instance
 
     // Attributes:
     /**
