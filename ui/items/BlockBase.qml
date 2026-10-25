@@ -94,7 +94,7 @@ Item {
         cornerRadius: glowRadius
         spread: 0.1
         color: Qt.rgba(0.9, 0.8, 0.0, 0.5)
-        visible: block && block.focused && showShadows
+        visible: (block && block.focused && showShadows) ? true : false
     }
 
     Rectangle {
