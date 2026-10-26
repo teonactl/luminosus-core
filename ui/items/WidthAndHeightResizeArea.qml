@@ -17,12 +17,12 @@ CustomTouchArea {
     property int initialWidth: 0
     property int initialBottom: 0
 
-    onTouchDown: {
+    onTouchDown: function(touch) {
         initialWidth = target.width
         initialBottom = target.y + target.height
     }
 
-    onTouchMove: {
+    onTouchMove: function(touch) {
         target.width = Math.max(minSize, Math.min(touch.x - touch.originX + initialWidth, maxSize))
         target.y = initialBottom - target.height
         target.block.positionChangedExternal()

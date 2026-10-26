@@ -14,13 +14,13 @@ CustomTouchArea {
     property int initialRight: 0
     property int initialTouchX: 0
 
-    onTouchDown: {
+    onTouchDown: function(touch) {
         initialWidth = target.width
         initialBottom = target.y + target.height
         initialRight = target.x + target.width
     }
 
-    onTouchMove: {
+    onTouchMove: function(touch) {
         target.width = Math.max(minSize, Math.min(touch.originX - touch.x + initialWidth, maxSize))
         target.y = initialBottom - target.height
         target.x = initialRight - target.width

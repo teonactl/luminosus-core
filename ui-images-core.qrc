@@ -8,6 +8,13 @@
         <file>ui/images/svg/undo.svg</file>
         <file>ui/images/svg/up_arrow_slim.svg</file>
         <file>ui/images/add_icon.png</file>
+        <file>ui/images/push_button_normal_70.png</file>
+        <file>ui/images/push_button_normal_140.png</file>
+        <file>ui/images/push_button_down_70.png</file>
+        <file>ui/images/push_button_down_140.png</file>
+        <file>ui/images/push_button_led_off.png</file>
+        <file>ui/images/push_button_led_blue.png</file>
+        <file>ui/images/push_button_led_yellow.png</file>
         <file>ui/images/combobox_arrows_blue.png</file>
         <file>ui/images/copy_icon.png</file>
         <file>ui/images/down_arrow_slim.png</file>
