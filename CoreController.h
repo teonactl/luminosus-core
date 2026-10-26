@@ -18,6 +18,11 @@ class KeyboardEmulator;
 class LogManager;
 class ProjectManager;
 class WebsocketConnection;
+class OSCNetworkManager;
+class EosOSCManager;
+class EosCueListManager;
+class EosActiveChannelsManager;
+class GlobalOscCommands;
 
 /**
  * @brief The CoreController class initializes all components and
@@ -117,6 +122,33 @@ public slots:
      * @return a pointer to a WebsocketConnection instance
      */
     WebsocketConnection* websocketConnection() { return m_websocketConnection.get(); }
+    /**
+     * @brief customOsc is a Getter for the OSCNetworkManager instance to use for custom OSC commands
+     * @return a pointer to an OSCNetworkManager instance
+     */
+    OSCNetworkManager* customOsc() { return m_customOsc.get(); }
+    /**
+     * @brief lightingConsole is a Getter for the OSCNetworkManager instance to use for sending
+     * commands to the connected lighting console (i.e. an Eos family console)
+     * @return a pointer to an OSCNetworkManager instance
+     */
+    OSCNetworkManager* lightingConsole() { return m_lightingConsole.get(); }
+    /**
+     * @brief eosManager is a Getter for the only EosOSCManager instance to use in this application
+     * @return a pointer to an EosOSCManager instance
+     */
+    EosOSCManager* eosManager() { return m_eosManager.get(); }
+    /**
+     * @brief cueListManager is a Getter for the only EosCueListManager instance to use in this application
+     * @return a pointer to an EosCueListManager instance
+     */
+    EosCueListManager* cueListManager() { return m_eosCueListManager.get(); }
+    /**
+     * @brief activeChannelsManager is a Getter for the only EosActiveChannelsManager instance to use
+     * in this application
+     * @return a pointer to an EosActiveChannelsManager instance
+     */
+    EosActiveChannelsManager* activeChannelsManager() { return m_eosActiveChannelsManager.get(); }
 
 
     // -----------------------------  State / Projects:
@@ -224,6 +256,12 @@ protected:
     QScopedPointer<LogManager> m_logManager;  //!< LogManager instance
     QScopedPointer<ProjectManager> m_projectManager;  //!< GlobalOscCommands instance
     QScopedPointer<WebsocketConnection> m_websocketConnection;  //!< WebsocketConnection instance
+    QScopedPointer<OSCNetworkManager> m_customOsc;  //!< OSCNetworkManager instance for custom OSC commands
+    QScopedPointer<OSCNetworkManager> m_lightingConsole;  //!< OSCNetworkManager instance for the lighting console connection
+    QScopedPointer<EosOSCManager> m_eosManager;  //!< EosOSCManager instance
+    QScopedPointer<GlobalOscCommands> m_globalOscCommands;  //!< GlobalOscCommands instance
+    QScopedPointer<EosCueListManager> m_eosCueListManager;  //!< EosCueListManager instance
+    QScopedPointer<EosActiveChannelsManager> m_eosActiveChannelsManager;  //!< EosActiveChannelsManager instance
 
     // Attributes:
     /**

@@ -12,6 +12,11 @@
 #include "core/manager/ProjectManager.h"
 #include "core/manager/StatusManager.h"
 #include "core/manager/WebsocketConnection.h"
+#include "core/osc/OSCNetworkManager.h"
+#include "core/osc/GlobalOscCommands.h"
+#include "core/eos/EosOSCManager.h"
+#include "core/eos/EosCueListManager.h"
+#include "core/eos/EosActiveChannelsManager.h"
 
 #include "core/helpers/constants.h"
 #include "core/helpers/utils.h"
@@ -40,6 +45,12 @@ CoreController::CoreController(QQmlApplicationEngine* qmlEngine, QString templat
     , m_logManager(new LogManager(this))
     , m_projectManager(new ProjectManager(this))
     , m_websocketConnection(new WebsocketConnection(this))
+    , m_customOsc(new OSCNetworkManager(this, {OscConnectionType::Custom, OscConnectionType::Eos}))
+    , m_lightingConsole(new OSCNetworkManager(this, {OscConnectionType::Eos}))
+    , m_eosManager(new EosOSCManager(this))
+    , m_globalOscCommands(new GlobalOscCommands(this))
+    , m_eosCueListManager(new EosCueListManager(this))
+    , m_eosActiveChannelsManager(new EosActiveChannelsManager(this))
     , m_developerMode(false)
     , m_clickSounds(false)
     , m_templateFileToImport(templateFile)
@@ -59,6 +70,10 @@ CoreController::CoreController(QQmlApplicationEngine* qmlEngine, QString templat
     qmlRegisterAnonymousType<LogManager>("Luminosus", 1);
     qmlRegisterAnonymousType<ProjectManager>("Luminosus", 1);
     qmlRegisterAnonymousType<WebsocketConnection>("Luminosus", 1);
+    qmlRegisterAnonymousType<OSCNetworkManager>("Luminosus", 1);
+    qmlRegisterAnonymousType<EosOSCManager>("Luminosus", 1);
+    qmlRegisterAnonymousType<EosCueListManager>("Luminosus", 1);
+    qmlRegisterAnonymousType<EosActiveChannelsManager>("Luminosus", 1);
 
     // Tell QML that these objects are owned by C++ and should not be deleted by the JS GC:
     // This is very important because otherwise SEGFAULTS will appear randomly!
@@ -73,6 +88,12 @@ CoreController::CoreController(QQmlApplicationEngine* qmlEngine, QString templat
     QQmlEngine::setObjectOwnership(m_logManager.get(), QQmlEngine::CppOwnership);
     QQmlEngine::setObjectOwnership(m_projectManager.get(), QQmlEngine::CppOwnership);
     QQmlEngine::setObjectOwnership(m_websocketConnection.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_customOsc.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_lightingConsole.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_eosManager.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_globalOscCommands.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_eosCueListManager.get(), QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_eosActiveChannelsManager.get(), QQmlEngine::CppOwnership);
 
     registerManager("statusManager", new StatusManager(this));
     registerManager("websocketConnection", m_websocketConnection.get());
@@ -125,6 +146,8 @@ void CoreController::saveAll() {
     appState["currentProject"_q] = m_projectManager->getCurrentProjectName();
     appState["developerMode"_q] = getDeveloperMode();
     appState["clickSounds"_q] = getClickSounds();
+    appState["customOsc"_q] = QCborMap::fromJsonObject(m_customOsc->getState());
+    appState["lightingConsole"_q] = QCborMap::fromJsonObject(m_lightingConsole->getState());
 
     for (auto managerName: m_manager.keys()) {
         const auto* objectWithAttributes = dynamic_cast<const ObjectWithAttributes*>(m_manager[managerName]);
@@ -162,6 +185,8 @@ void CoreController::restoreApp() {
     m_guiManager->readFrom(appState);
     setDeveloperMode(appState["developerMode"_q].toBool());
     setClickSounds(appState["clickSounds"_q].toBool());
+    m_customOsc->setState(appState["customOsc"_q].toMap().toJsonObject());
+    m_lightingConsole->setState(appState["lightingConsole"_q].toMap().toJsonObject());
 
     for (auto managerName: m_manager.keys()) {
         auto* objectWithAttributes = dynamic_cast<ObjectWithAttributes*>(m_manager[managerName]);

@@ -51,6 +51,17 @@ set(PROJECT_HEADERS
     core/manager/ProjectManager.h
     core/manager/WebsocketConnection.h
     core/helpers/AsyncWebSocket.h
+    core/osc/OSCMessage.h
+    core/osc/OSCParser.h
+    core/osc/OSCNetworkManager.h
+    core/osc/GlobalOscCommands.h
+    core/eos/OSCDiscovery.h
+    core/eos/EosOSCMessage.h
+    core/eos/EosCue.h
+    core/eos/EosCueList.h
+    core/eos/EosCueListManager.h
+    core/eos/EosActiveChannelsManager.h
+    core/eos/EosOSCManager.h
     core/version.h
 )
 
@@ -101,6 +112,17 @@ set(PROJECT_SOURCES
     core/manager/ProjectManager.cpp
     core/manager/WebsocketConnection.cpp
     core/helpers/AsyncWebSocket.cpp
+    core/osc/OSCMessage.cpp
+    core/osc/OSCParser.cpp
+    core/osc/OSCNetworkManager.cpp
+    core/osc/GlobalOscCommands.cpp
+    core/eos/OSCDiscovery.cpp
+    core/eos/EosOSCMessage.cpp
+    core/eos/EosCue.cpp
+    core/eos/EosCueList.cpp
+    core/eos/EosCueListManager.cpp
+    core/eos/EosActiveChannelsManager.cpp
+    core/eos/EosOSCManager.cpp
 )
 
 set(PROJECT_RESOURCES
